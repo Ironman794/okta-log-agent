@@ -1,0 +1,15 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Runtime output: contains the logins and queries you investigated
+agent_audit.log
+*.log
+
+# Secrets
+.env
+*.pem
+*.key
+*.jwk
+private_key*
