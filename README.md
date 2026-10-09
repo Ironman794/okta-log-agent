@@ -71,6 +71,10 @@ python okta_log_agent.py "why is jdoe@example.com failing to sign in today?"
 - Every tool call is appended to `agent_audit.log` in the current directory, including the logins you asked about. That file is gitignored.
 - Each query is capped at 1,000 log events and 1,000 app assignees. The agent says when results were truncated.
 
+## License
+
+[MIT](LICENSE)
+
 ## Disclaimer
 
 This is a personal project and is not affiliated with or endorsed by Okta. Use a test tenant or lab data until your organization approves it.
