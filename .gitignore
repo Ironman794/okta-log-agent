@@ -13,3 +13,7 @@ agent_audit.log
 *.key
 *.jwk
 private_key*
+
+# Chainlit: generated at startup
+.chainlit/translations/
+.files/

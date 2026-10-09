@@ -1,0 +1,33 @@
+# Render Blueprint for the OASIS web front end (app.py).
+# "sync: false" values are typed into the Render dashboard when the Blueprint is created; they never live in the repo.
+# The Okta private key is added separately as a Secret File named okta_private_key.pem.
+services:
+  - type: web
+    name: oasis
+    runtime: python
+    plan: free  # sleeps after 15 idle minutes and forgets open conversations; use "starter" to stay awake
+    buildCommand: pip install -r requirements.txt
+    startCommand: chainlit run app.py --host 0.0.0.0 --port $PORT --headless
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      # Okta API access (the API Services app oasis.py already uses)
+      - key: OKTA_ORG_URL
+        sync: false
+      - key: OKTA_CLIENT_ID
+        sync: false
+      - key: OKTA_PRIVATE_KEY_FILE
+        value: /etc/secrets/okta_private_key.pem
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      # Tester sign-in (a separate OIDC Web app in Okta)
+      - key: OAUTH_OKTA_DOMAIN
+        sync: false
+      - key: OAUTH_OKTA_CLIENT_ID
+        sync: false
+      - key: OAUTH_OKTA_CLIENT_SECRET
+        sync: false
+      - key: OAUTH_OKTA_AUTHORIZATION_SERVER_ID
+        value: "false"  # sign in through the org authorization server, which every Okta org has
+      - key: CHAINLIT_AUTH_SECRET
+        generateValue: true

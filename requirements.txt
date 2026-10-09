@@ -1,3 +1,4 @@
 anthropic
 requests
 pyjwt[crypto]
+chainlit>=2.12,<3   # web front end (app.py) only

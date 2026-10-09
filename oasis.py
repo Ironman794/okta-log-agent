@@ -1,5 +1,5 @@
 r"""
-Read-only Okta IAM troubleshooting agent (v2).
+OASIS (Okta Access Security Intelligence System): read-only Okta IAM troubleshooting agent (v2).
 Tools: search_logs (paginated + summarized), get_user_status, get_user_authenticators,
        find_apps, get_user_apps, get_app_assignments.
 
@@ -12,8 +12,8 @@ Env:    OKTA_ORG_URL=https://your-org.okta.com
         OKTA_KEY_ID=...                          (optional kid; needed if the app has more than one key)
         OKTA_SCOPES=okta.logs.read okta.users.read okta.apps.read   (optional, space-separated; default below)
         ANTHROPIC_API_KEY=...
-Run:    python okta_log_agent.py                 (interactive prompt; "new" resets, "exit" quits)
-        python okta_log_agent.py "why is jdoe@example.com failing to sign in today?"   (one question, then exit)
+Run:    python oasis.py                 (interactive prompt; "new" resets, "exit" quits)
+        python oasis.py "why is jdoe@example.com failing to sign in today?"   (one question, then exit)
 Test tenant / lab data only until your org approves this.
 """
 import os, sys, json, time, uuid, collections, datetime as dt
@@ -383,16 +383,19 @@ SYSTEM = (
 )
 
 
-def audit(name, args):
+def audit(name, args, user=None):
+    entry = {"ts": dt.datetime.now(dt.timezone.utc).isoformat(), "tool": name, "args": args}
+    if user:
+        entry["user"] = user  # set by the web front end (app.py), where several people share one deployment
     with open("agent_audit.log", "a") as f:
-        f.write(json.dumps({"ts": dt.datetime.now(dt.timezone.utc).isoformat(), "tool": name, "args": args}) + "\n")
+        f.write(json.dumps(entry) + "\n")
 
 
 def ask(client, messages, question):
     """Run one question to completion. Appends to messages so follow-ups keep context."""
     messages.append({"role": "user", "content": question})
     for _ in range(8):  # hard loop cap
-        print("[asking Claude...]", file=sys.stderr, flush=True)
+        print("[asking OASIS...]", file=sys.stderr, flush=True)
         resp = client.messages.create(model=MODEL, max_tokens=2000, system=SYSTEM, tools=TOOLS, messages=messages)
         messages.append({"role": "assistant", "content": resp.content})
         if resp.stop_reason != "tool_use":
@@ -416,11 +419,11 @@ def ask(client, messages, question):
 
 def chat(client):
     """Interactive prompt. Follow-up questions share context until 'new' clears it."""
-    print("Okta log agent (read-only). Type a question, 'new' to start a fresh conversation, 'exit' to quit.")
+    print("OASIS: Okta Access Security Intelligence System (read-only). Type a question, 'new' to start a fresh conversation, 'exit' to quit.")
     messages = []
     while True:
         try:
-            question = input("\nokta> ").strip()
+            question = input("\noasis> ").strip()
         except (EOFError, KeyboardInterrupt):
             print()
             return
