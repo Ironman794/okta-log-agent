@@ -1,0 +1,29 @@
+/* Welcome screen: logo, then the name and tagline, then the message box. */
+#welcome-screen > * {
+  order: 3;
+}
+
+#welcome-screen > img.logo {
+  order: 0;
+  width: 96px;
+  margin-bottom: 0;
+}
+
+#welcome-screen::before {
+  content: "OASIS";
+  order: 1;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
+#welcome-screen::after {
+  content: "Okta Access Security Intelligence System";
+  order: 2;
+  margin-top: -0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  opacity: 0.7;
+  text-align: center;
+}
