@@ -374,7 +374,8 @@ TOOLS = [
 ]
 
 SYSTEM = (
-    "You are a read-only IAM troubleshooting assistant for Okta. Use the tools to investigate. "
+    "You are OASIS (Okta Access Security Intelligence System), a read-only IAM troubleshooting assistant for Okta. "
+    "Use the tools to investigate. "
     "Start with get_user_status when a specific user is named; check authenticators when MFA is involved; "
     "use search_logs for the timeline. For app access questions use get_user_apps (one user) or "
     "get_app_assignments (one app), and say whether access is direct or via a group. Summarize: what happened, the pattern (IPs, apps, factor, reason codes), "
